@@ -1,10 +1,11 @@
-const {app, BrowserWindow, ipcMain } = require('electron')
+const {app, BrowserWindow, ipcMain, net } = require('electron')
 const log = require('electron-log');
 let path = require('path');
 let Info = require('../public/electron/info');
 let { getPublicIp } = require('../public/common/system')
+const { io } = require('socket.io-client');
 
-let redis = require('redis');
+const socket = io('http://13.124.239.21:4005');
 
 let mainWindow;
 
@@ -42,25 +43,12 @@ const createWindow = async () => {
 //     })
 // })
 
-ipcMain.on('send-user-data', (event, args) => {
+ipcMain.on('send-user-data', async (event, args) => {
     // log.log(args)
-    let data = JSON.parse(args)
-
+    let data = args
+    log.log(data)
+    await socket.emit('send_name', data)
 })
-
-
-async function connectToRedis() {
-    const client = redis.createClient({
-        host: '172.31.34.1' ?? 'localhost',
-        port: 26379 ?? 6379
-    })
-
-    await client.on('connect', () => {
-        console.log('Connected to Redis')
-        mainWindow.webContents.send('redis-connected', 'Connected to Redis!');
-    })
-
-}
 
 app.whenReady().then(async () => {
 
@@ -70,6 +58,14 @@ app.whenReady().then(async () => {
     mainWindow = await createWindow();
     mainWindow.webContents.openDevTools({ mode: 'right' });
     mainWindow.webContents.on('did-finish-load', () => {
-        connectToRedis()
+        socket.on('connect', async () => {
+            console.log(socket.id)
+        })
+
     })
+})
+
+
+socket.on('send_name',(data) => {
+    console.log('이름 받아라ㅣ', data)
 })
