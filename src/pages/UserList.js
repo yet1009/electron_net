@@ -16,6 +16,10 @@ const UserList = observer(() => {
         setValue('');
     }
 
+    const inquiryData = () => {
+        userStore.getUserData();
+    }
+
     return (
         <div className='user_ipt'>
             <div className='ipt_box'>
@@ -34,6 +38,15 @@ const UserList = observer(() => {
                         sendUser()
                     }}
                 >전송</button>
+            </div>
+            <div className='btn_box'>
+                {/*<span>{}</span>*/}
+                <button
+                    type='button'
+                    onClick={() => {
+                        inquiryData()
+                    }}
+                >조회</button>
             </div>
         </div>
     )

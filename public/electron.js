@@ -50,6 +50,10 @@ ipcMain.on('send-user-data', async (event, args) => {
     await socket.emit('send_name', data)
 })
 
+ipcMain.on('get-user-data', async () => {
+    await socket.emit('get_name')
+})
+
 app.whenReady().then(async () => {
 
     const _localIp = await getPublicIp()
@@ -58,14 +62,22 @@ app.whenReady().then(async () => {
     mainWindow = await createWindow();
     mainWindow.webContents.openDevTools({ mode: 'right' });
     mainWindow.webContents.on('did-finish-load', () => {
-        socket.on('connect', async () => {
-            console.log(socket.id)
-        })
+        // socket.on('connect', async () => {
+        //     console.log(socket.id)
+        // })
 
     })
 })
 
 
+socket.on('connect', () => {
+    console.log(socket.id)
+})
+
 socket.on('send_name',(data) => {
-    console.log('이름 받아라ㅣ', data)
+    console.log('이름 받아라~~', data)
+})
+
+socket.on('get_name', (data) => {
+    console.log('수신한 이름은........', data)
 })

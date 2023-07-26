@@ -18,4 +18,8 @@ contextBridge.exposeInMainWorld('api', {
     sendData: (data) => {
         ipcRenderer.send('send-user-data', JSON.stringify(data))
     },
+    getData: () => {
+        ipcRenderer.send('get-user-data', null)
+    }
+
 })

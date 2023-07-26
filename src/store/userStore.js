@@ -6,6 +6,7 @@ class UserStore {
     userInfo = {
         name: ''
     };
+    val = '';
 
     constructor() {
         makeAutoObservable(this)
@@ -20,6 +21,13 @@ class UserStore {
         }catch(e) {
             throw new Error('Something went wrong')
         }
+    }
+
+    async getUserData() {
+        if(!this.userInfo['name'].length) return;
+        this.val = await window.api.getData()
+
+        return this.val;
     }
 
 }
